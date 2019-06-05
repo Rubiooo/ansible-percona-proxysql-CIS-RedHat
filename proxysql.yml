@@ -1,0 +1,5 @@
+---
+- hosts: key_proxysql
+  become: yes
+  roles:
+    - ansible-proxysql

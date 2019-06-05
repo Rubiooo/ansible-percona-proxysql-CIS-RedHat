@@ -1,0 +1,21 @@
+# roles/ansible-percona-cluster/vars/RedHat.yml
+#
+# Distribution-specific variables for RHEL, CentOS, ...
+---
+
+xtradb_repo_filename: "percona"
+xtradb_repo_name: "percona-release-latest"
+xtradb_repo_desc: "Percona-Release YUM repository - $basearch"
+xtradb_repo_baseurl: "https://repo.percona.com/yum/percona-release-{{ xtradb_release }}.noarch.rpm"
+xtradb_repo_enabled: yes
+xtradb_repo_gpgcheck: yes
+xtradb_repo_gpgkey: "https://repo.percona.com/yum/PERCONA-PACKAGING-KEY"
+
+xtradb_wsrep_provider: /usr/lib64/galera3/libgalera_smm.so
+xtradb_confdir: /etc/percona-xtradb-cluster.conf.d
+xtradb_config_file: "{{ xtradb_confdir}}/wsrep.cnf"
+xtradb_iptables_file: /etc/sysconfig/iptables
+xtradb_packages:
+  - "Percona-XtraDB-Cluster-{{ xtradb_version }}"
+  - MySQL-python
+...

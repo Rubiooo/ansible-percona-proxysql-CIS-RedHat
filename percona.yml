@@ -1,0 +1,5 @@
+---
+- hosts: key_percona
+  become: yes
+  roles:
+    - ansible-percona-cluster

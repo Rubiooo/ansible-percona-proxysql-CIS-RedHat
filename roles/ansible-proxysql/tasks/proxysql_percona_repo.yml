@@ -1,0 +1,56 @@
+---
+
+- name: Change SELinux state
+  selinux:
+    policy: targeted
+    state: permissive
+  when: ansible_selinux.status == 'enabled'
+
+- name: Install Percona YUM repository
+  yum:
+    name: "{{ proxysql_percona_repo }}"
+    state: present
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
+  when: >
+        (proxysql_use_percona_repo) and
+        (ansible_os_family == "RedHat")
+
+- name: Replace Percona Release Repo file
+  template:
+    dest: /etc/yum.repos.d/percona-original-release.repo
+    group: root
+    owner: root
+    mode: 0644
+    src: percona-original-release.repo
+
+- name: Yum Clean Cache
+  command: yum clean all
+  args:
+    warn: no
+
+- name: Install MySQL-python
+  yum:
+    name: MySQL-python
+    state: present
+
+- name: Install mysql
+  yum:
+    name: mysql
+    state: present
+
+- name: Create ProxySQL group
+  group:
+    name: proxysql
+    state: present
+
+- name: Create ProxySQL Users
+  user:
+    create_home: no
+    comment: ProxySQL
+    groups: proxysql
+    home: "{{ proxysql_datadir }}"
+    name: proxysql
+    shell: /bin/false

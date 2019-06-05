@@ -1,0 +1,41 @@
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT DROP [0:0]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p tcp -m conntrack --dport 3306 --ctstate NEW,ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m conntrack --dport 4567 --ctstate NEW,ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m conntrack --dport 4568 --ctstate NEW,ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m conntrack --dport 4444 --ctstate NEW,ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m conntrack --dport 6032 --ctstate NEW,ESTABLISHED -j ACCEPT
+-A INPUT -p udp -m conntrack --dport 4567 --ctstate NEW,ESTABLISHED -j ACCEPT
+-A INPUT -s 127.0.0.0/8 -j DROP
+-A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
+-A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
+-A INPUT -p udp -m udp --dport 68 -m state --state NEW -j ACCEPT
+-A INPUT -p udp -m udp --dport 123 -m state --state NEW -j ACCEPT
+-A INPUT -p udp -m udp --dport 323 -m state --state NEW -j ACCEPT
+
+-A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -p tcp -m conntrack --sport 3306 --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p tcp -m conntrack --sport 4567 --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p tcp -m conntrack --sport 4568 --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p tcp -m conntrack --sport 4444 --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p tcp -m conntrack --sport 6032 --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p udp -m conntrack --sport 4567 --ctstate ESTABLISHED -j ACCEPT
+-A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
+-A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
+-A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
+-A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
+COMMIT
+# Completed on May 22, 2019
+*security
+:INPUT ACCEPT [928:543546]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [641:69384]
+-A OUTPUT -d 168.63.129.16/32 -p tcp -m owner --uid-owner 0 -j ACCEPT
+-A OUTPUT -d 168.63.129.16/32 -p tcp -m conntrack --ctstate INVALID,NEW -j DROP
+COMMIT
+# Completed on May 22, 2019

@@ -1,0 +1,10 @@
+---
+- hosts: key_percona
+  become: yes
+  roles:
+    - ansible-percona-cluster
+
+- hosts: key_proxysql
+  become: yes
+  roles:
+    - ansible-proxysql
